@@ -2,7 +2,7 @@
 
 Partially auto-generated. The **config snapshot** below is rendered from `fx-scalper/config/settings.py`. The **operational procedures** section is merged from `fx-scalper/docs/runbook_manual.md`.
 
-Last rendered: `2026-04-21 19:36:20` UTC
+Last rendered: `2026-04-21 19:52:54` UTC
 
 ## Config snapshot
 

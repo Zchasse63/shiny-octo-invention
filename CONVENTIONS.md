@@ -81,6 +81,38 @@ is missing something relevant, either:
 2. Use the Context7 MCP tool for on-demand doc queries, and note the URL
    in the answer so future-us knows where to look.
 
+### Research loop — exploration ↔ AI iteration
+
+The goal is NOT autonomous pattern-finding. It's a disciplined loop where:
+
+1. **Explorer runs** a broad sweep over signal families × params × exit configs × walk-forward splits
+2. **[`iterate.py`](fx-scalper/src/backtest/iterate.py)** loads the results CSV → formats top-N (+ per-family aggregates) as a structured prompt
+3. **[`ai_research.ask()`](fx-scalper/src/utils/ai_research.py)** sends the prompt to `vbt.chat`, which does RAG over vectorbtpro's full docs/examples/Discord corpus
+4. **Answer** is logged to `events.jsonl` (kind=`ai_query`) AND saved as a Markdown artifact under [`docs/research/ai_queries/<ts>-<tag>.md`](fx-scalper/docs/research/ai_queries/)
+5. **Human reviews** (you read the answer). Claude proposes a concrete next iteration: add family X, extend param grid on Y, add filter Z. This goes in an ADR if it's load-bearing.
+6. **Re-run** with the new configuration. Loop.
+
+**Prompt kinds** (see [`iterate.py`](fx-scalper/src/backtest/iterate.py) `_PROMPTS`):
+- `next_iteration` — "what patterns in the top performers, what should I try next"
+- `diagnose_drawdown` — "why did this strategy bleed through period X"
+- `compare_families` — "which family is strongest and why"
+- `propose_new_family` — "what signal families haven't I tried"
+- `explain_anomaly` — "here's a weird result, what could cause it"
+
+**Budget guard rails:**
+- Default cap: `$10/day`, enforced at call time by [`ai_research.ask()`](fx-scalper/src/utils/ai_research.py).
+- Every call logs estimated cost + cumulative daily spend.
+- Provider auto-picked from env; defaults to Anthropic (better for code/strategy questions), falls back to OpenAI.
+- First call triggers corpus download + embedding build. Slow (~5-10 min). Subsequent calls cached and fast.
+
+**Hard rule:**
+- `src.utils.ai_research` must NEVER be imported from anything in [`src/live/`](fx-scalper/src/live/). Enforced at runtime by a stack-walk check. AI output is non-deterministic and must not be in the trading critical path. See ADR 0002 (Tier 3 deferred).
+
+**What this loop does NOT do:**
+- It doesn't "learn from your trading results" — each LLM call is stateless. The **logs** are the memory; the LLM contributes hypotheses, not persistence.
+- It doesn't find edge for you. It helps you iterate on your own hypotheses faster.
+- It doesn't control for overfitting. That's what walk-forward OOS does. Iteration that ignores OOS degradation is how retail quant strategies die.
+
 ### vectorbtpro — where to look first
 
 For backtest harness code, grep [`fx-scalper/docs/external/vectorbt-pro/vectorbtpro/portfolio/`](fx-scalper/docs/external/vectorbt-pro/vectorbtpro/portfolio/)

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "_doc": "MCP servers scoped to this repo. Committed to git (no secrets here — the vectorbtpro server inherits env vars from its launcher, which sources fx-scalper/.env).",
+  "mcpServers": {
+    "vectorbtpro": {
+      "_doc": "vectorbt Pro's native MCP server (vectorbtpro.mcp_server). Exposes vbt tool registry (chat, search, find, analysis helpers) to Claude Code. Registered via CONVENTIONS.md §Research loop. Launcher sources .env for API keys.",
+      "command": "bash",
+      "args": [
+        "fx-scalper/scripts/run_mcp_server.sh"
+      ]
+    }
+  }
+}

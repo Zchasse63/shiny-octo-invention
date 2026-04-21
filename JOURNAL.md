@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 19:36:19` UTC  
-Events logged: **8**
+Last rendered: `2026-04-21 19:52:53` UTC  
+Events logged: **13**
 
 ## Narrative overlay
 
@@ -88,3 +88,10 @@ into JOURNAL.md below this overlay.
   User identified BB-RSI / trend-momentum / session-breakout choices as prior-Claude assumptions. Switched to strategy-agnostic exploration across 6 signal families with common exit framework. See fx-scalper/docs/research/prior_assumptions_archive.md.
 - **19:35:19 LEARNING: Exit framework is strategy-agnostic** `(331d1f7)`  
   All 6 families emit only entries; exits (SL, TP, trail variants) come from ExitConfig in src/strategies/exits.py. Lets us sweep all combos uniformly.
+- **19:45:08 AI_QUERY** `(f5c893f)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-19/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T194508-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **19:51:15 AI_QUERY** `(f5c893f)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-20/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T195115-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **19:51:28 AI_QUERY** `(f5c893f)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-21/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T195128-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **19:52:06 DECISION `(f5c893f)`: Research loop wired — Tier 2 Knowledge module active**  
+  src/utils/ai_research.py wraps vbt.chat/vbt.search with per-UTC-day budget cap ($10 default), event+artifact logging, runtime assertion that blocks import from src/live/. src/backtest/iterate.py formats exploration results into structured prompts. .mcp.json + scripts/run_mcp_server.sh prepared for Claude Code MCP registration (requires session restart to activate). See CONVENTIONS.md new section.
+- **19:52:06 CONFIG `fx-scalper/requirements.txt`** `(f5c893f)`  
+  `scipy`: `1.14.1 pin` → `>=1.14,<1.17` — scipy 1.17 broke sklearn compat (csr_matrix export moved). Pin below 1.17 until sklearn catches up. Downgraded in venv 1.17.1 to 1.16.3.

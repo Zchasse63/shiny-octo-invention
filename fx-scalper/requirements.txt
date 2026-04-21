@@ -4,7 +4,9 @@ oandapyV20==0.7.2
 # --- Data + scientific stack ---
 pandas==2.2.3
 numpy==2.2.6
-scipy==1.14.1
+# scipy 1.17 removed the top-level csr_matrix export that sklearn<=1.8 still uses.
+# Pin to 1.16.x until sklearn catches up.
+scipy>=1.14,<1.17
 pyarrow==17.0.0
 
 # --- Indicators ---
