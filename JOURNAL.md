@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 21:59:28` UTC  
-Events logged: **51**
+Last rendered: `2026-04-21 23:37:31` UTC  
+Events logged: **55**
 
 ## Narrative overlay
 
@@ -139,3 +139,10 @@ into JOURNAL.md below this overlay.
   `annualization`: `hardcoded minutes_per_year` → `auto-detect from index cadence` — Sharpe was being computed with minute annualization for non-M1 TFs. Fix auto-detects bar cadence; non-PF metrics are unaffected.
 - **21:56:48 AI_QUERY** `(63fe8dd)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-36/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T215648-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
 - **21:58:36 AI_QUERY** `(7fdaf66)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-37/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T215836-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:59:29 AI_QUERY** `(7fdaf66)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-38/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T215929-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **23:37:29 LEARNING: Current CB floor kills ALL round-3 winners on $500** `(de61389)`  
+  Every top config has DD > 20% (130-214 USD). At $500 cap with $400 floor (20% limit), every winner would trigger EMERGENCY_SHUTDOWN mid-run. Fix: scale CB to strategy DD profile, not hardcoded initial plan.
+- **23:37:29 LEARNING: Portfolio of 3 timeframe strategies may beat single-best** `(de61389)`  
+  Running M5+M15+M30 top configs on $1500 ($500 each) gives ~$2000/yr with ~20% DD assuming moderate correlation. vs single M5-only on $1500: $1092/yr with 26% DD. Round 5 needs saved equity curves to measure real correlation.
+- **23:37:29 DECISION `(de61389)`: M15 bb_rsi_mr has exceptional risk-adjusted returns**  
+  RRR 6.41x — annual profit is 6.41x of max drawdown. Professional-grade. Top config: BB(30,2.5), RSI(21), thresholds 35/80, SL 0.5xATR, TP 1.5R, chandelier 2xATR trail.
