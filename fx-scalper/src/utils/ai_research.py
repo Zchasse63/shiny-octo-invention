@@ -217,10 +217,27 @@ def _save_artifact(
 # ---------------------------------------------------------------------------
 
 
+def _ensure_env_loaded() -> None:
+    """Eagerly load ``fx-scalper/.env`` into the process env.
+
+    ``python -c`` entry points don't always have the right CWD; we resolve
+    the .env path relative to this module's file location so it always works.
+    Uses ``override=True`` because the shell may pre-set API key variables
+    to empty strings (python-dotenv's default ``override=False`` treats an
+    empty-string env var as "already set" and skips).
+    """
+    from dotenv import load_dotenv
+
+    env_path = _project_root() / ".env"
+    if env_path.exists():
+        load_dotenv(env_path, override=True)
+
+
 def _pick_provider(override: Provider | None = None) -> Provider:
     """Return the first available provider from env keys. Raises if none."""
     if override is not None:
         return override
+    _ensure_env_loaded()
     if os.environ.get("ANTHROPIC_API_KEY"):
         return "anthropic"
     if os.environ.get("OPENAI_API_KEY"):
@@ -410,18 +427,37 @@ def _call_vbt_chat(
     # No explicit vbt config here — it auto-selects based on what's in env.
 
     logger.info(f"vbt.chat(provider={provider}, quick={quick}): {question[:80]}…")
-    kwargs: dict[str, Any] = {"quick_mode": quick}
 
-    # Call vbt.chat — returns the answer (and optionally the chat object).
-    result = vbt.chat(question, **kwargs)
-    if result is None:
-        answer = ""
-    elif isinstance(result, str):
-        answer = result
-    else:
-        answer = str(result)
+    # stream=False so the result is returned as a string, not printed to stdout
+    # incrementally. return_chat=True gives us (response, Chat) — Chat exposes
+    # chat_history from which we can extract the final assistant turn reliably.
+    kwargs: dict[str, Any] = {
+        "quick_mode": quick,
+        "stream": False,
+        "return_chat": True,
+    }
 
-    # Rough token estimate if vbt doesn't return the underlying chat metadata.
+    raw = vbt.chat(question, **kwargs)
+
+    # vbt.chat with return_chat=True returns (response, chat). Extract the
+    # assistant message from chat_history as the canonical answer.
+    answer = ""
+    chat = None
+    if isinstance(raw, tuple) and len(raw) == 2:
+        response, chat = raw
+        if isinstance(response, str):
+            answer = response
+    elif isinstance(raw, str):
+        answer = raw
+
+    if not answer and chat is not None:
+        history = getattr(chat, "chat_history", None) or []
+        for msg in reversed(history):
+            if isinstance(msg, dict) and msg.get("role") == "assistant":
+                content = msg.get("content", "")
+                answer = content if isinstance(content, str) else str(content)
+                break
+
     in_tokens = len(question) // 4  # ~4 chars per token
     out_tokens = len(answer) // 4
     model = f"{provider}/default"

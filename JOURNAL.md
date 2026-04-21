@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 19:52:53` UTC  
-Events logged: **13**
+Last rendered: `2026-04-21 20:07:37` UTC  
+Events logged: **22**
 
 ## Narrative overlay
 
@@ -95,3 +95,12 @@ into JOURNAL.md below this overlay.
   src/utils/ai_research.py wraps vbt.chat/vbt.search with per-UTC-day budget cap ($10 default), event+artifact logging, runtime assertion that blocks import from src/live/. src/backtest/iterate.py formats exploration results into structured prompts. .mcp.json + scripts/run_mcp_server.sh prepared for Claude Code MCP registration (requires session restart to activate). See CONVENTIONS.md new section.
 - **19:52:06 CONFIG `fx-scalper/requirements.txt`** `(f5c893f)`  
   `scipy`: `1.14.1 pin` → `>=1.14,<1.17` — scipy 1.17 broke sklearn compat (csr_matrix export moved). Pin below 1.17 until sklearn catches up. Downgraded in venv 1.17.1 to 1.16.3.
+- **19:52:55 AI_QUERY** `(f5c893f)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-22/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T195255-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **20:00:16 AI_QUERY** `(79ab988)` — `artifact=/Users/zach/Desktop/Forex/fx-scalper/docs/research/ai_queries/20260421T200016-smoke_test.md`, `cost_usd=9.7e-05`, `daily_spend_so_far_usd=0.0001`, `input_tokens=39`, `model=openai/default`, `output_tokens=0`, `provider=openai`, `tag=smoke_test`
+- **20:02:19 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-23/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200219-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **20:02:53 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-24/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200253-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **20:03:05 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-25/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200305-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **20:03:43 AI_QUERY** `(79ab988)` — `artifact=/Users/zach/Desktop/Forex/fx-scalper/docs/research/ai_queries/20260421T200343-smoke_test_v2.md`, `cost_usd=0.001628`, `daily_spend_so_far_usd=0.0017`, `input_tokens=35`, `model=openai/default`, `output_tokens=154`, `provider=openai`, `tag=smoke_test_v2`
+- **20:06:22 AI_QUERY** `(79ab988)` — `artifact=/Users/zach/Desktop/Forex/fx-scalper/docs/research/ai_queries/20260421T200622-smoke_test_v3_anthropic.md`, `cost_usd=0.001689`, `daily_spend_so_far_usd=0.0034`, `input_tokens=23`, `model=anthropic/default`, `output_tokens=108`, `provider=anthropic`, `tag=smoke_test_v3_anthropic`
+- **20:06:56 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-26/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200656-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **20:07:10 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-27/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200710-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`

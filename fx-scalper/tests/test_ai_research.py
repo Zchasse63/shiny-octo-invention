@@ -28,7 +28,12 @@ def temp_project_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return tmp_path
 
 
+def _noop_env_load() -> None:
+    """Prevent _ensure_env_loaded from reading the real .env during tests."""
+
+
 def test_pick_provider_prefers_anthropic(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(ai_research, "_ensure_env_loaded", _noop_env_load)
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
     monkeypatch.setenv("OPENAI_API_KEY", "test")
     assert ai_research._pick_provider() == "anthropic"
@@ -37,6 +42,7 @@ def test_pick_provider_prefers_anthropic(monkeypatch: pytest.MonkeyPatch) -> Non
 def test_pick_provider_falls_back_to_openai(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setattr(ai_research, "_ensure_env_loaded", _noop_env_load)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.setenv("OPENAI_API_KEY", "test")
     assert ai_research._pick_provider() == "openai"
@@ -45,6 +51,7 @@ def test_pick_provider_falls_back_to_openai(
 def test_pick_provider_raises_when_no_key(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setattr(ai_research, "_ensure_env_loaded", _noop_env_load)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
