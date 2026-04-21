@@ -16,6 +16,26 @@ import pandas as pd
 MINUTES_PER_YEAR = 365 * 24 * 60  # 525,600 (FX runs ~24/5 but annualize over calendar)
 
 
+def _infer_bars_per_year(returns: pd.Series) -> int | None:
+    """Infer the annualization factor from the returns index spacing.
+
+    Returns ``MINUTES_PER_YEAR / median_bar_minutes`` — i.e. the number of
+    bars per year at the detected cadence. Falls back to None if the index
+    isn't a DatetimeIndex or has <2 entries.
+    """
+    idx = returns.index
+    if not isinstance(idx, pd.DatetimeIndex) or len(idx) < 2:
+        return None
+    # Median delta in minutes — robust against gaps.
+    deltas = idx.to_series().diff().dropna()
+    if deltas.empty:
+        return None
+    median_minutes = deltas.median().total_seconds() / 60.0
+    if median_minutes <= 0:
+        return None
+    return int(MINUTES_PER_YEAR / median_minutes)
+
+
 @dataclass(frozen=True, slots=True)
 class BacktestMetrics:
     """Post-cost metrics for a run.
@@ -54,20 +74,29 @@ def compute_metrics(
     returns: pd.Series,
     trade_pnl_usd: pd.Series,
     initial_cash: float,
-    minutes_per_year: int = MINUTES_PER_YEAR,
+    minutes_per_year: int | None = None,
 ) -> BacktestMetrics:
-    """Compute post-cost metrics from minute returns and trade PnLs.
+    """Compute post-cost metrics from per-bar returns and trade PnLs.
 
     Args:
-        returns: Minute-bar returns (e.g. equity.pct_change()).
+        returns: Per-bar returns (e.g. equity.pct_change()). The bar frequency
+            is auto-detected from the index when possible so Sharpe/Sortino
+            annualize correctly for non-minute timeframes.
         trade_pnl_usd: Per-trade realized PnL in account currency.
         initial_cash: Starting equity.
-        minutes_per_year: Annualization factor.
+        minutes_per_year: Override the annualization factor. If None,
+            inferred from the returns index spacing (or falls back to
+            ``MINUTES_PER_YEAR`` if inference fails).
 
     Returns:
         :class:`BacktestMetrics`.
     """
     returns = returns.dropna()
+
+    # Auto-detect annualization if not overridden. The factor equals
+    # (bars per year) = (minutes_per_year / bar_minutes).
+    if minutes_per_year is None:
+        minutes_per_year = _infer_bars_per_year(returns) or MINUTES_PER_YEAR
 
     total_trades = int(trade_pnl_usd.shape[0])
     if total_trades == 0:

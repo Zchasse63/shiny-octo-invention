@@ -2,7 +2,7 @@
 
 Auto-generated from `fx-scalper/src/strategies/`. **Do not hand-edit this file** — add narrative to `fx-scalper/docs/strategies_manual.md` and re-run `python fx-scalper/scripts/render_strategies.py`.
 
-Last rendered: `2026-04-21 21:44:00` UTC
+Last rendered: `2026-04-21 21:56:47` UTC
 
 ## Strategies registered
 

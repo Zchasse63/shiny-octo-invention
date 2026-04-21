@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 21:44:00` UTC  
-Events logged: **40**
+Last rendered: `2026-04-21 21:56:47` UTC  
+Events logged: **49**
 
 ## Narrative overlay
 
@@ -125,3 +125,15 @@ into JOURNAL.md below this overlay.
 - **21:39:59 LEARNING: Session filter transforms losing families into winning ones** `(b479c1c)`  
   Same rsi_extreme that lost money unfiltered becomes rsi_extreme_filtered with PF 2.01 after adding london_ny_overlap session filter. Context beats signal design.
 - **21:41:53 EXPLORATION_COMPLETE** `(b479c1c)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_5min`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_5min/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=13950`
+- **21:44:02 AI_QUERY** `(b479c1c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-34/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T214402-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:44:56 EXPLORATION_COMPLETE** `(63fe8dd)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_15min`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_15min/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=13950`
+- **21:47:45 EXPLORATION_COMPLETE** `(63fe8dd)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_30min`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_30min/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=13950`
+- **21:50:32 EXPLORATION_COMPLETE** `(63fe8dd)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_1H`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_1H/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=13950`
+- **21:55:00 AI_QUERY** `(63fe8dd)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-35/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T215500-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:55:55 EXPLORATION_COMPLETE** `(63fe8dd)` — `best_expectancy_usd=15.66`, `best_pf=2.37`, `csv=backtest_results/explore_multi_tf_20260421T2137/combined_results.csv`, `rationale=Multi-TF sweep unlocked MASSIVE edge. M5 rsi_extreme_filtered PF 2.37. H1 ema_cross PF 1.63 exp $11.64. Every TF has winners. Unfiltered MR works at M15+. See docs/research/round3_findings.md.`, `round=3`, `timeframes=['5min', '15min', '30min', '1H']`, `total_rows=55800`, `winners_pf_gt_1_2=80`
+- **21:55:55 LEARNING: Higher timeframe = better spread/edge ratio** `(63fe8dd)`  
+  M1 edges get eaten by 0.6 pip spread. At M15+ the per-trade edge dominates. bb_rsi_mr which lost at M1 wins at M15-H1 without any filter.
+- **21:55:55 LEARNING: Different TFs need different signal families** `(63fe8dd)`  
+  M5: session-filtered MR (rsi_extreme_filtered). M15/M30: unfiltered MR (bb_rsi_mr). H1: momentum (ema_cross). No single family dominates across TFs.
+- **21:55:55 CONFIG `fx-scalper/src/backtest/metrics.py`** `(63fe8dd)`  
+  `annualization`: `hardcoded minutes_per_year` → `auto-detect from index cadence` — Sharpe was being computed with minute annualization for non-M1 TFs. Fix auto-detects bar cadence; non-PF metrics are unaffected.
