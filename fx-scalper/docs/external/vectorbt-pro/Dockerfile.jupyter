@@ -1,0 +1,27 @@
+FROM quay.io/jupyter/scipy-notebook:python-3.12
+
+USER root
+WORKDIR /tmp
+
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends cmake nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+USER ${NB_UID}
+
+RUN pip install uv
+
+COPY ./vectorbtpro ./vectorbtpro
+COPY pyproject.toml LICENSE README.md ./
+
+RUN uv pip install --system --no-cache-dir "universal-portfolios" || true
+RUN uv pip install --system --no-cache-dir "smartmoneyconcepts>0.0.10" || true
+RUN uv pip install --system --no-cache-dir "arcticdb" || true
+
+RUN uv pip install --system --no-cache-dir ".[all-stable]"
+
+# https://github.com/plotly/dash/issues/2580
+RUN jupyter lab build --minimize=False
+
+WORKDIR "$HOME/work"

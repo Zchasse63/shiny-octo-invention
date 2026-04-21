@@ -14,6 +14,9 @@ REPOS=(
   "loguru|https://github.com/Delgan/loguru.git|"
   "nautilus_trader|https://github.com/nautechsystems/nautilus_trader.git|tests crates assets"
   "duka|https://github.com/giuse88/duka.git|"
+  # vectorbt.pro is private — user must have `gh auth status` logged in as a GitHub account
+  # with approved access for this clone to succeed.
+  "vectorbt-pro|https://github.com/polakowo/vectorbt.pro.git|"
 )
 
 mkdir -p "$EXT_DIR"

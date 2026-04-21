@@ -81,6 +81,20 @@ is missing something relevant, either:
 2. Use the Context7 MCP tool for on-demand doc queries, and note the URL
    in the answer so future-us knows where to look.
 
+### vectorbtpro — where to look first
+
+For backtest harness code, grep [`fx-scalper/docs/external/vectorbt-pro/vectorbtpro/portfolio/`](fx-scalper/docs/external/vectorbt-pro/vectorbtpro/portfolio/)
+for `from_signals.py`, [`vectorbtpro/utils/`](fx-scalper/docs/external/vectorbt-pro/vectorbtpro/utils/) for `Param` and `parameterized`,
+[`vectorbtpro/generic/splitting/`](fx-scalper/docs/external/vectorbt-pro/vectorbtpro/generic/) for `Splitter`.
+For the Intelligence/Knowledge module, see [`vectorbtpro/knowledge/`](fx-scalper/docs/external/vectorbt-pro/vectorbtpro/knowledge/)
+(`completions.py`, `embeddings.py`, `reranking.py`, `doc_storing.py`).
+For worked examples, [`vectorbt-pro/tests/`](fx-scalper/docs/external/vectorbt-pro/tests/) has
+real usage patterns for nearly every feature. Context7 library ID for
+remote queries: `/llmstxt/vectorbt_pro_pvt_4f8d7c01_llms-full_txt` (13,932
+indexed snippets). Full capability review + integration plan:
+[`fx-scalper/docs/research/vectorbtpro_capabilities.md`](fx-scalper/docs/research/vectorbtpro_capabilities.md)
+and [`DECISIONS/0002-vectorbtpro-integration-scope.md`](DECISIONS/0002-vectorbtpro-integration-scope.md).
+
 ## Decision records (ADRs)
 
 Non-trivial decisions — library swaps, schema changes, scope pivots — get

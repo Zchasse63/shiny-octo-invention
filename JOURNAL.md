@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 14:43:26` UTC  
-Events logged: **3**
+Last rendered: `2026-04-21 15:18:54` UTC  
+Events logged: **6**
 
 ## Narrative overlay
 
@@ -78,3 +78,9 @@ into JOURNAL.md below this overlay.
   See DECISIONS/0001-in-house-dukascopy-client.md
 - **14:42:05 LEARNING: pandas-ta-classic Imports is a dict**  
   Imports is a dict not an object in v0.4.x. talib_available() handles both.
+- **15:18:02 DECISION `(4c0db8c)`: vectorbt Pro integration scope (three-tier plan)** — see `DECISIONS/0002.md`  
+  Tier 1 (core harness) lands in Day 4. Tier 2 (Knowledge/MCP for research) post-Day 4. Tier 3 (runtime LLM gating) deferred post-Day 7. See fx-scalper/docs/research/vectorbtpro_capabilities.md for full review.
+- **15:18:02 LEARNING: vectorbtpro ships its own MCP server** `(4c0db8c)`  
+  vectorbtpro/mcp.py + mcp_server.py — we can register vbt.chat and vbt.search as MCP tools in Claude Code once a GitHub token + LLM API key are configured (Tier 2).
+- **15:18:02 CONFIG `fx-scalper/.venv`** `(4c0db8c)`  
+  `vectorbtpro`: `None` → `2026.4.7` — Day 4 backtest harness dependency. +120 transitive deps (numba, torch, plotly, openai, sentence-transformers, hyperopt, optuna, etc).

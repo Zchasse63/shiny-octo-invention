@@ -19,6 +19,7 @@ See [../../CONVENTIONS.md](../../../CONVENTIONS.md) for the full rule.
 | [loguru](loguru/) | [Delgan/loguru](https://github.com/Delgan/loguru) | Logging library used by `src/utils/logger.py` | 2.3 MB | `loguru/`, `docs/`, `README.rst` |
 | [nautilus_trader](nautilus_trader/) | [nautechsystems/nautilus_trader](https://github.com/nautechsystems/nautilus_trader) | Day-7 execution-realism validation harness | 18 MB | `docs/`, `examples/`, `nautilus_trader/`, `python/` |
 | [duka](duka/) | [giuse88/duka](https://github.com/giuse88/duka) | Historical reference — the Dukascopy library we abandoned (see `DECISIONS/0001`) | 372 KB | `duka/`, `README.md` |
+| [vectorbt-pro](vectorbt-pro/) | [polakowo/vectorbt.pro](https://github.com/polakowo/vectorbt.pro) (private) | Backtest harness + Knowledge / Intelligence RAG module + native MCP server. See `DECISIONS/0002` + `docs/research/vectorbtpro_capabilities.md` | 15 MB | `vectorbtpro/` (source), `vectorbtpro/knowledge/` (Intelligence), `vectorbtpro/portfolio/`, `vectorbtpro/mcp_server.py`, `tests/` |
 
 ## OANDA v20 REST API — notes
 
