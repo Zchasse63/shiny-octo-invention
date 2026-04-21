@@ -31,6 +31,7 @@ class BBRSIMRFamily(SignalFamily):
     """Bollinger band + RSI extreme mean reversion."""
 
     name = "bb_rsi_mr"
+    params_cls = BBRSIMRParams
 
     def __init__(self, params: BBRSIMRParams | None = None) -> None:
         self._p = params or BBRSIMRParams()

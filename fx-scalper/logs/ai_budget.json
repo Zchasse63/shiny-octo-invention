@@ -1,7 +1,7 @@
 {
   "utc_date": "2026-04-21",
-  "spend_usd": 0.003414,
-  "call_count": 3,
+  "spend_usd": 0.073902,
+  "call_count": 4,
   "queries": [
     {
       "ts": "2026-04-21T20:00:16+00:00",
@@ -32,6 +32,16 @@
         "output": 108
       },
       "cost_usd": 0.001689
+    },
+    {
+      "ts": "2026-04-21T21:08:30+00:00",
+      "tag": "iter1_eurusd_what_went_wrong",
+      "provider": "anthropic",
+      "tokens": {
+        "input": 2856,
+        "output": 4128
+      },
+      "cost_usd": 0.070488
     }
   ]
 }

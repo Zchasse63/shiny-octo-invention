@@ -36,6 +36,7 @@ class PullbackEMAFamily(SignalFamily):
     """Pullback to fast EMA in the direction of slow EMA slope."""
 
     name = "pullback_ema"
+    params_cls = PullbackEMAParams
 
     def __init__(self, params: PullbackEMAParams | None = None) -> None:
         self._p = params or PullbackEMAParams()

@@ -28,6 +28,7 @@ class EMACrossFamily(SignalFamily):
     """Momentum crossover of two EMAs."""
 
     name = "ema_cross"
+    params_cls = EMACrossParams
 
     def __init__(self, params: EMACrossParams | None = None) -> None:
         self._p = params or EMACrossParams()
@@ -55,3 +56,7 @@ class EMACrossFamily(SignalFamily):
             "fast_ema": [5, 9, 13, 21],
             "slow_ema": [21, 34, 55, 89],
         }
+
+    def param_filter(self, params: dict[str, Any]) -> bool:
+        """Require fast_ema strictly less than slow_ema."""
+        return params["fast_ema"] < params["slow_ema"]

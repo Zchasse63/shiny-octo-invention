@@ -29,6 +29,7 @@ class RSIExtremeFamily(SignalFamily):
     """RSI oversold-cross-up (long) / overbought-cross-down (short)."""
 
     name = "rsi_extreme"
+    params_cls = RSIExtremeParams
 
     def __init__(self, params: RSIExtremeParams | None = None) -> None:
         self._p = params or RSIExtremeParams()

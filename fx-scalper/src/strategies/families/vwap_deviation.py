@@ -34,6 +34,7 @@ class VWAPDeviationFamily(SignalFamily):
     """Rolling VWAP deviation fade."""
 
     name = "vwap_deviation"
+    params_cls = VWAPDeviationParams
 
     def __init__(self, params: VWAPDeviationParams | None = None) -> None:
         self._p = params or VWAPDeviationParams()

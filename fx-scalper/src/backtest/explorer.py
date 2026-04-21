@@ -133,22 +133,30 @@ def _run_single_backtest(
     initial_cash: float,
     slippage: np.ndarray | None,
 ) -> BacktestMetrics:
-    """Run ``vbt.Portfolio.from_signals`` for one config + compute metrics."""
+    """Run ``vbt.Portfolio.from_signals`` for one config + compute metrics.
+
+    vbt uses SEPARATE kwargs for fixed stop (``sl_stop``) vs trailing stop
+    (``tsl_stop``). When trail is enabled we pass the trail distance via
+    ``tsl_stop`` and skip ``sl_stop``; when disabled we pass ``sl_stop`` only.
+    """
     import vectorbtpro as vbt
 
-    # sl/tp as fractions; NaN where no entry bar → vbt ignores.
     kwargs: dict[str, Any] = {
         "close": close,
         "entries": entries_long,
         "short_entries": entries_short,
-        "sl_stop": sl_frac.fillna(0.0).to_numpy(),
         "tp_stop": tp_frac.fillna(0.0).to_numpy(),
-        "sl_trail": use_trail,
         "leverage": leverage,
         "init_cash": initial_cash,
         "freq": "1min",
         "fees": 0.0,
     }
+    # Trailing vs fixed stop — pick one.
+    if use_trail and trail_frac is not None:
+        kwargs["tsl_stop"] = trail_frac.fillna(0.0).to_numpy()
+    else:
+        kwargs["sl_stop"] = sl_frac.fillna(0.0).to_numpy()
+
     if slippage is not None:
         kwargs["slippage"] = slippage
 
@@ -241,8 +249,18 @@ def explore(
 
     for family in families:
         grid = family.param_grid()
-        combos = list(_iter_param_combos(grid))
-        combos = _subsample(combos, config.random_subset_per_family)
+        all_combos = list(_iter_param_combos(grid))
+        # Apply the family's optional constraint filter before subsampling,
+        # so random_subset samples only valid combos (e.g. ema_cross enforces
+        # fast_ema < slow_ema — avoids the zero-trade / inf-PF pathology).
+        valid_combos = [c for c in all_combos if family.param_filter(c)]
+        skipped = len(all_combos) - len(valid_combos)
+        if skipped:
+            logger.info(
+                f"explore [{family.name}]: filtered {skipped} invalid "
+                f"param combos (e.g. fast >= slow)"
+            )
+        combos = _subsample(valid_combos, config.random_subset_per_family)
         logger.info(
             f"explore [{family.name}]: {len(combos)} param combos × "
             f"{len(exit_configs)} exits × {len(splits)} splits = "
@@ -284,6 +302,11 @@ def explore(
                         sub_short = signals.entries_short.iloc[sl]
                         sub_sl = vbt_params.sl_stop.iloc[sl]
                         sub_tp = vbt_params.tp_stop.iloc[sl]
+                        sub_trail = (
+                            vbt_params.trail_distance_pct.iloc[sl]
+                            if vbt_params.trail_distance_pct is not None
+                            else None
+                        )
                         sub_slip = (
                             slippage[sl.start : sl.stop] if slippage is not None else None
                         )
@@ -294,7 +317,7 @@ def explore(
                             entries_short=sub_short,
                             sl_frac=sub_sl,
                             tp_frac=sub_tp,
-                            trail_frac=None,
+                            trail_frac=sub_trail,
                             use_trail=vbt_params.sl_trail,
                             leverage=config.leverage,
                             initial_cash=config.initial_cash,
@@ -351,22 +374,16 @@ def _exit_config_dict(cfg: ExitConfig) -> dict[str, Any]:
 def _instantiate(family: SignalFamily, params: dict[str, Any]) -> SignalFamily:
     """Create a new family instance from a params dict.
 
-    Each family's constructor accepts an optional typed params dataclass.
-    We inspect the class for its params dataclass type and build one.
+    Uses the class's ``params_cls`` attribute (required on every
+    :class:`SignalFamily` subclass) — reading the ``__init__`` annotation
+    doesn't work with ``from __future__ import annotations`` because
+    annotations become strings.
     """
-    import inspect
-
     cls = type(family)
-    sig = inspect.signature(cls.__init__)
-    # The first arg after `self` should be `params` — its annotation is the
-    # dataclass type.
-    params_param = list(sig.parameters.values())[1]
-    params_type = params_param.annotation
-    # Strip Optional / Union wrappers if any.
-    import typing
-
-    origin = typing.get_origin(params_type)
-    if origin is typing.Union:
-        args = [a for a in typing.get_args(params_type) if a is not type(None)]
-        params_type = args[0]
+    params_type = getattr(cls, "params_cls", None)
+    if params_type is None:
+        raise TypeError(
+            f"{cls.__name__} is missing the 'params_cls' class attribute. "
+            f"Every SignalFamily must set it to its Params dataclass."
+        )
     return cls(params_type(**params))

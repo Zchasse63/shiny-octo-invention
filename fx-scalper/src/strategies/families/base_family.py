@@ -30,6 +30,7 @@ class SignalFamily(ABC):
     """
 
     name: str  # Override in subclass.
+    params_cls: type  # Override in subclass — the dataclass of parameters.
 
     @abstractmethod
     def generate(self, candles: pd.DataFrame) -> FamilySignals:
@@ -51,3 +52,17 @@ class SignalFamily(ABC):
 
         Keys are parameter names. Values are the candidate lists.
         """
+
+    def param_filter(self, params: dict[str, Any]) -> bool:
+        """Optional predicate: skip param combos that don't satisfy a constraint.
+
+        Default: accept every combo. Override in subclasses when cartesian
+        enumeration produces invalid configs (e.g. ``fast_ema < slow_ema``).
+
+        Args:
+            params: Candidate param dict from the grid.
+
+        Returns:
+            True if the combo should be tested, False to skip.
+        """
+        return True

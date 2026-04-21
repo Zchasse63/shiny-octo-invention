@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 20:07:37` UTC  
-Events logged: **22**
+Last rendered: `2026-04-21 21:10:34` UTC  
+Events logged: **31**
 
 ## Narrative overlay
 
@@ -104,3 +104,13 @@ into JOURNAL.md below this overlay.
 - **20:06:22 AI_QUERY** `(79ab988)` — `artifact=/Users/zach/Desktop/Forex/fx-scalper/docs/research/ai_queries/20260421T200622-smoke_test_v3_anthropic.md`, `cost_usd=0.001689`, `daily_spend_so_far_usd=0.0034`, `input_tokens=23`, `model=anthropic/default`, `output_tokens=108`, `provider=anthropic`, `tag=smoke_test_v3_anthropic`
 - **20:06:56 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-26/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200656-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
 - **20:07:10 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-27/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200710-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **20:07:38 AI_QUERY** `(79ab988)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-28/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T200738-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **20:51:15 EXPLORATION_COMPLETE** `(bbf209c)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2051`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2051/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme']`, `total_runs=0`
+- **20:56:46 EXPLORATION_COMPLETE** `(bbf209c)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2053`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2053/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme']`, `total_runs=8100`
+- **21:04:45 EXPLORATION_COMPLETE** `(bbf209c)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2059`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2059/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme']`, `total_runs=8100`
+- **21:08:30 AI_QUERY** `(bbf209c)` — `artifact=/Users/zach/Desktop/Forex/fx-scalper/docs/research/ai_queries/20260421T210830-iter1_eurusd_what_went_wrong.md`, `cost_usd=0.070488`, `daily_spend_so_far_usd=0.0739`, `input_tokens=2856`, `model=anthropic/default`, `output_tokens=4128`, `provider=anthropic`, `tag=iter1_eurusd_what_went_wrong`
+- **21:09:55 EXPLORATION_COMPLETE** `(bbf209c)` — `best_expectancy_usd=0.32`, `best_pf=0.991`, `configs=1292`, `csv=backtest_results/explore_20260421T2059/full_results.csv`, `profitable_oos=0`, `rationale=Naive signal families all fail OOS. Best: bb_rsi_mr with PF ~0.99 (marginal losing). Spread eats vanilla signals. AI analysis + iteration plan in docs/research/ai_queries/20260421T210830-iter1_eurusd_what_went_wrong.md`, `round=1`
+- **21:09:55 LEARNING: Tight-stop high-win-rate trap empirically confirmed** `(bbf209c)`  
+  VWAP_deviation with 0.5 ATR stop + 0.75 R TP produced 70%+ win rate but Sharpe -7 to -20 and DD 99%. Rare large losses erase many small wins. Exit symmetry matters more than win rate.
+- **21:09:56 AI_QUERY** `(bbf209c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-29/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T210956-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:10:07 AI_QUERY** `(bbf209c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-30/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T211007-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`

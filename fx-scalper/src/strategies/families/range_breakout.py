@@ -32,6 +32,7 @@ class RangeBreakoutFamily(SignalFamily):
     """Break of recent range after volatility contraction."""
 
     name = "range_breakout"
+    params_cls = RangeBreakoutParams
 
     def __init__(self, params: RangeBreakoutParams | None = None) -> None:
         self._p = params or RangeBreakoutParams()

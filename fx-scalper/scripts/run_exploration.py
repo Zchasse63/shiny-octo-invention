@@ -47,6 +47,8 @@ def parse_args() -> argparse.Namespace:
 
 def _ranking_summary(df: pd.DataFrame) -> str:
     """Build a markdown ranking summary from the flat results DataFrame."""
+    if df.empty or "kind" not in df.columns:
+        return "_(no results — all runs failed; check the explorer log)_\n"
     oos = df[df["kind"] == "OOS"].copy()
     if oos.empty:
         return "_(no OOS rows)_"
