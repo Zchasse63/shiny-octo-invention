@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 21:10:34` UTC  
-Events logged: **31**
+Last rendered: `2026-04-21 21:44:00` UTC  
+Events logged: **40**
 
 ## Narrative overlay
 
@@ -114,3 +114,14 @@ into JOURNAL.md below this overlay.
   VWAP_deviation with 0.5 ATR stop + 0.75 R TP produced 70%+ win rate but Sharpe -7 to -20 and DD 99%. Rare large losses erase many small wins. Exit symmetry matters more than win rate.
 - **21:09:56 AI_QUERY** `(bbf209c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-29/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T210956-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
 - **21:10:07 AI_QUERY** `(bbf209c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-30/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T211007-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:10:36 AI_QUERY** `(bbf209c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-31/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T211036-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:33:48 EXPLORATION_COMPLETE** `(b479c1c)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2116`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_20260421T2116/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=26640`
+- **21:37:18 AI_QUERY** `(b479c1c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-32/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T213718-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:37:33 AI_QUERY** `(b479c1c)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-33/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T213733-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:37:35 AI_QUERY** `(b479c1c)` — `artifact=/Users/zach/Desktop/Forex/fx-scalper/docs/research/ai_queries/20260421T213735-iter2_round2_winners_analysis.md`, `cost_usd=0.085878`, `daily_spend_so_far_usd=0.1598`, `input_tokens=3256`, `model=anthropic/default`, `output_tokens=5074`, `provider=anthropic`, `tag=iter2_round2_winners_analysis`
+- **21:39:59 EXPLORATION_COMPLETE** `(b479c1c)` — `best_expectancy_usd=0.84`, `best_pf=2.01`, `configs=3526`, `csv=backtest_results/explore_20260421T2116/full_results.csv`, `profitable_oos=74`, `rationale=Session filter = edge. 52 of 74 winners in london_ny_overlap. rsi_extreme_filtered dominates. Best PF 2.01 on 95 trades, Sharpe 1.73, DD 18%. See docs/research/round2_findings.md.`, `round=2`
+- **21:39:59 LEARNING: ADX filter provides no value in this sweep** `(b479c1c)`  
+  70 of 74 round-2 winners had max_adx=None. Session filter (london_ny_overlap) is doing the work, not regime filter.
+- **21:39:59 LEARNING: Session filter transforms losing families into winning ones** `(b479c1c)`  
+  Same rsi_extreme that lost money unfiltered becomes rsi_extreme_filtered with PF 2.01 after adding london_ny_overlap session filter. Context beats signal design.
+- **21:41:53 EXPLORATION_COMPLETE** `(b479c1c)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_5min`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260421T2137/tf_5min/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=13950`

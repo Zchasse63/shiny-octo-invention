@@ -10,6 +10,12 @@ from __future__ import annotations
 from src.strategies.families.base_family import FamilySignals, SignalFamily
 from src.strategies.families.bb_rsi_mr import BBRSIMRFamily, BBRSIMRParams
 from src.strategies.families.ema_cross import EMACrossFamily, EMACrossParams
+from src.strategies.families.filtered_mr import (
+    FilteredBBRSIMRFamily,
+    FilteredBBRSIMRParams,
+    FilteredRSIExtremeFamily,
+    FilteredRSIExtremeParams,
+)
 from src.strategies.families.pullback_ema import PullbackEMAFamily, PullbackEMAParams
 from src.strategies.families.range_breakout import (
     RangeBreakoutFamily,
@@ -27,6 +33,10 @@ __all__ = [
     "EMACrossFamily",
     "EMACrossParams",
     "FamilySignals",
+    "FilteredBBRSIMRFamily",
+    "FilteredBBRSIMRParams",
+    "FilteredRSIExtremeFamily",
+    "FilteredRSIExtremeParams",
     "PullbackEMAFamily",
     "PullbackEMAParams",
     "RangeBreakoutFamily",
@@ -46,5 +56,7 @@ ALL_FAMILIES: list[type[SignalFamily]] = [
     EMACrossFamily,
     BBRSIMRFamily,
     RSIExtremeFamily,
+    FilteredBBRSIMRFamily,
+    FilteredRSIExtremeFamily,
 ]
-"""Every family included in the exploratory sweep."""
+"""Every family included in the exploratory sweep (round 2 adds filtered MR variants)."""
