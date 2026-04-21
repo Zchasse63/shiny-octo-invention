@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 15:18:54` UTC  
-Events logged: **6**
+Last rendered: `2026-04-21 19:36:19` UTC  
+Events logged: **8**
 
 ## Narrative overlay
 
@@ -84,3 +84,7 @@ into JOURNAL.md below this overlay.
   vectorbtpro/mcp.py + mcp_server.py — we can register vbt.chat and vbt.search as MCP tools in Claude Code once a GitHub token + LLM API key are configured (Tier 2).
 - **15:18:02 CONFIG `fx-scalper/.venv`** `(4c0db8c)`  
   `vectorbtpro`: `None` → `2026.4.7` — Day 4 backtest harness dependency. +120 transitive deps (numba, torch, plotly, openai, sentence-transformers, hyperopt, optuna, etc).
+- **19:35:19 DECISION `(331d1f7)`: Reset to exploratory phase; scrap injected strategy pre-commitments** — see `DECISIONS/0003.md`  
+  User identified BB-RSI / trend-momentum / session-breakout choices as prior-Claude assumptions. Switched to strategy-agnostic exploration across 6 signal families with common exit framework. See fx-scalper/docs/research/prior_assumptions_archive.md.
+- **19:35:19 LEARNING: Exit framework is strategy-agnostic** `(331d1f7)`  
+  All 6 families emit only entries; exits (SL, TP, trail variants) come from ExitConfig in src/strategies/exits.py. Lets us sweep all combos uniformly.
