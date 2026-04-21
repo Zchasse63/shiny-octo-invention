@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 21:56:47` UTC  
-Events logged: **49**
+Last rendered: `2026-04-21 21:59:28` UTC  
+Events logged: **51**
 
 ## Narrative overlay
 
@@ -137,3 +137,5 @@ into JOURNAL.md below this overlay.
   M5: session-filtered MR (rsi_extreme_filtered). M15/M30: unfiltered MR (bb_rsi_mr). H1: momentum (ema_cross). No single family dominates across TFs.
 - **21:55:55 CONFIG `fx-scalper/src/backtest/metrics.py`** `(63fe8dd)`  
   `annualization`: `hardcoded minutes_per_year` → `auto-detect from index cadence` — Sharpe was being computed with minute annualization for non-M1 TFs. Fix auto-detects bar cadence; non-PF metrics are unaffected.
+- **21:56:48 AI_QUERY** `(63fe8dd)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-36/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T215648-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **21:58:36 AI_QUERY** `(7fdaf66)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-37/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T215836-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
