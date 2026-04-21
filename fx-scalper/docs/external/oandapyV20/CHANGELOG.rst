@@ -1,0 +1,181 @@
+Changelog
+=========
+
+[Unreleased]
+------------
+
+v0.7.2 (2021-08-26)
+-------------------
+
+Documentation Changes
+~~~~~~~~~~~~~~~~~~~~~
+
+-  [endpoints] fix -> trades.TradeDetails
+
+v0.7.1 (2021-08-15)
+-------------------
+
+Bug Fixes
+~~~~~~~~~
+
+-  [types] make Units handle up to 2 decimals (was 1)
+
+v0.7.0 (2021-05-25)
+-------------------
+
+Bug Fixes
+~~~~~~~~~
+
+-  [test] test_orders: fix fail python 3.9
+
+-  [types] make Units handle up to 1 decimal
+
+Documentation Changes
+~~~~~~~~~~~~~~~~~~~~~
+
+-  using the with context
+
+Administration and Chores
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-  rename CHANGES.txt -> CHANGELOG.rst
+
+-  [versions] support Python 3.5 - 3.9
+
+Version 0.6.3
+-------------
+
+2018/04/12
+          update of definitions according v20-openapi release 3.0.22
+
+Version 0.6.2
+-------------
+
+2018/04/07
+          granularity_to_time now also handles weekly 'W' as parameter,
+          see PR #119. Tests added.
+
+Version 0.6.1
+-------------
+
+2018/03/31
+          InstrumentsCandlesFactory fix, incorrect handling of parameters
+          in the rare case one would not specify the 'from' parameter,
+          see PR #117
+
+Version 0.6.0
+-------------
+
+2018/03/07
+          support added for the (legacy) forexlabs endpoints, #110. See
+          developer.oanda.com for details.
+
+Version 0.5.0
+-------------
+
+2018/02/18
+          update various definitions as OANDA added these to their docs
+
+Version 0.4.5
+-------------
+
+2017/09/25
+          force 'includeFirst' in InstrumentsCandlesFactory, #100
+
+Version 0.4.4
+-------------
+
+2017/09/23
+          fix bug in InstrumentsCandlesFactory skipping the last request, #97
+
+Version 0.4.3
+-------------
+
+2017/08/21
+          fix missing gtdTime in LimitOrderRequest, #94
+
+Version 0.4.2
+-------------
+
+2017/07/24
+          fix possible 'date is in the future' error when retrieving candledata
+          using InstrumentsCandlesFactory
+
+Version 0.4.1
+-------------
+
+2017/07/11:
+          bugfix, see pr #85
+
+Version 0.4.0
+-------------
+
+2017/07/04:
+          contrib.factories added, pr #81:
+          InstrumentsCandlesFactory to generate InstrumentsCandles requests
+
+Version 0.3.0
+-------------
+
+2017/06/28:
+          Recently released extra instruments endpoints added, pr #77:
+          /v3/instruments/{instrument}/orderBook
+          /v3/instruments/{instrument}/positionBook
+
+Version 0.2.4
+-------------
+2017/05/15:
+          documentation fix regarding incorrect output references of
+          AccountList and AccountDetails, #pr 73
+
+Version 0.2.3
+-------------
+2017/04/17:
+          fix: trades.TradesList unhandled params, issue #69
+
+2017/03/09:
+          jupyter notebooks added
+
+2017/02/08:
+          Python 3.6 added
+
+2017/01/30:
+          datetime name conflict solved, issue #62
+
+2016/12/05:
+          documentation: dynamically generated types directory tree
+
+          types: DateTime subsecond part fix
+
+2016/12/05:
+          fixes OrderSpecifier
+
+2016/12/01:
+          extend types with DateTime
+
+2016/11/17:
+          bug streaming prices: list values need to be joined, solved #50
+
+Version 0.2.2
+-------------
+2016/11/17:
+          extend types with AccountID
+          definitions
+          increase coverage
+          contrib.request classes timeInForce parameter add and/or verify
+          against allowed values
+
+Version 0.2.1
+-------------
+2016/11/15:
+          * documentation updates
+          * missing requirement: six added
+
+Version 0.2.0
+-------------
+2016/11/15:
+
+          * first release with coverage of all endpoints except the 'forexlabs'
+          * definitions covered as in the development documeintation
+          * types representing data types as in the development documeintation
+          * contrib.requests: classes to construct data for requestbodies

@@ -1,0 +1,43 @@
+# --- OANDA SDK ---
+oandapyV20==0.7.2
+
+# --- Data + scientific stack ---
+pandas==2.2.3
+numpy==2.2.6
+scipy==1.14.1
+pyarrow==17.0.0
+
+# --- Indicators ---
+pandas-ta-classic==0.4.47
+# TA-Lib is installed separately after `brew install ta-lib` (system lib).
+# Pin here so pip install picks it up if system lib is present.
+TA-Lib==0.6.8
+
+# --- Historical data ---
+duka==0.2.0
+
+# --- Execution-realism validation (Day 7) ---
+# NautilusTrader is heavy; install on demand per Day 7 task.
+# nautilus_trader==1.206.0
+
+# --- Dev utilities ---
+python-dotenv==1.0.1
+loguru==0.7.2
+pydantic==2.9.2
+
+# --- Testing ---
+pytest==8.3.3
+pytest-asyncio==0.24.0
+pytest-mock==3.14.0
+
+# --- Lint / types ---
+ruff==0.7.1
+mypy==1.13.0
+
+# --- HTTP (used by oandapyV20 but pin explicitly for rate-limit retries) ---
+requests==2.32.3
+urllib3==2.2.3
+
+# vectorbt Pro is installed separately (private repo):
+#   pip install -U "vectorbtpro[base] @ git+https://github.com/polakowo/vectorbt.pro.git"
+# Requires the user's GitHub account to be granted access by Oleg after payment.

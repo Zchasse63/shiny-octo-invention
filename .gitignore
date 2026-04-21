@@ -1,0 +1,14 @@
+# macOS / editors
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Claude Code runtime (session locks, caches) — not part of the project
+.claude/
+
+# Generated docs (scraped external refs are committed under docs/external/;
+# but temporary firecrawl working dirs are not).
+.firecrawl_cache/
+
+# Everything project-specific is ignored by fx-scalper/.gitignore.

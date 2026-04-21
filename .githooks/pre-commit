@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Pre-commit: re-render JOURNAL/STRATEGIES/RUNBOOK, lint, test.
+# If anything fails, the commit is aborted — fix the issue, don't bypass.
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+PY="$REPO_ROOT/fx-scalper/.venv/bin/python"
+PYTEST="$REPO_ROOT/fx-scalper/.venv/bin/pytest"
+RUFF="$REPO_ROOT/fx-scalper/.venv/bin/ruff"
+
+cd "$REPO_ROOT"
+
+# Guard: venv must exist.
+if [[ ! -x "$PY" ]]; then
+  echo "✗ pre-commit: venv missing at fx-scalper/.venv/ — run:"
+  echo "    /opt/homebrew/bin/python3.11 -m venv fx-scalper/.venv"
+  echo "    fx-scalper/.venv/bin/pip install -r fx-scalper/requirements.txt"
+  exit 1
+fi
+
+echo "==> Re-rendering JOURNAL / STRATEGIES / RUNBOOK"
+"$PY" fx-scalper/scripts/render_all.py
+
+# Auto-stage any regenerated top-level doc files so the commit includes them.
+for doc in JOURNAL.md STRATEGIES.md RUNBOOK.md; do
+  if git diff --quiet "$doc" 2>/dev/null; then
+    :  # unchanged
+  else
+    git add "$doc"
+  fi
+done
+
+echo "==> ruff"
+"$RUFF" check fx-scalper/src fx-scalper/config fx-scalper/scripts fx-scalper/tests
+
+echo "==> pytest"
+( cd fx-scalper && "$PYTEST" -q )
+
+echo "✓ pre-commit passed"

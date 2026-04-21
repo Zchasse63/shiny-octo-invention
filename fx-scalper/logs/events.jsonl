@@ -1,0 +1,3 @@
+{"adr": null, "kind": "decision", "rationale": "Render-driven JOURNAL/STRATEGIES/RUNBOOK + local clones of every library we depend on.", "title": "Automation layer + knowledge base added", "ts": "2026-04-21T14:42:05.104690+00:00"}
+{"adr": "0001", "kind": "decision", "rationale": "See DECISIONS/0001-in-house-dukascopy-client.md", "title": "In-house Dukascopy downloader", "ts": "2026-04-21T14:42:05.127310+00:00"}
+{"detail": "Imports is a dict not an object in v0.4.x. talib_available() handles both.", "kind": "learning", "title": "pandas-ta-classic Imports is a dict", "ts": "2026-04-21T14:42:05.143206+00:00"}

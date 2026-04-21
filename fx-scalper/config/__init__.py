@@ -1,0 +1,27 @@
+"""Configuration package: static settings and secret loading."""
+
+from __future__ import annotations
+
+from config.settings import (
+    ACCOUNT_FLOOR_USD,
+    ACCOUNT_STARTING_BALANCE_USD,
+    CASH_PER_TRADE_USD,
+    DAILY_LOSS_LIMIT_USD,
+    INSTRUMENTS,
+    MAX_CONCURRENT_POSITIONS,
+    MAX_CONSECUTIVE_LOSSES,
+    MAX_LEVERAGE,
+    SINGLE_TRADE_MAX_LOSS_USD,
+)
+
+__all__ = [
+    "ACCOUNT_FLOOR_USD",
+    "ACCOUNT_STARTING_BALANCE_USD",
+    "CASH_PER_TRADE_USD",
+    "DAILY_LOSS_LIMIT_USD",
+    "INSTRUMENTS",
+    "MAX_CONCURRENT_POSITIONS",
+    "MAX_CONSECUTIVE_LOSSES",
+    "MAX_LEVERAGE",
+    "SINGLE_TRADE_MAX_LOSS_USD",
+]

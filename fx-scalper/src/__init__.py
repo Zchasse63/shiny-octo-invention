@@ -1,0 +1,1 @@
+"""fx-scalper source package."""
