@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-22 00:25:35` UTC  
-Events logged: **59**
+Last rendered: `2026-04-22 15:46:34` UTC  
+Events logged: **63**
 
 ## Narrative overlay
 
@@ -74,6 +74,10 @@ into JOURNAL.md below this overlay.
 
 - **00:24:43 AI_QUERY** `(12a7c78)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-40/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260422T002443-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
 - **00:24:56 AI_QUERY** `(12a7c78)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-41/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260422T002456-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **00:25:36 AI_QUERY** `(12a7c78)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-42/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260422T002536-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **00:33:59 EXPLORATION_COMPLETE** — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260422T0026/tf_5min`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260422T0026/tf_5min/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=25020`
+- **00:40:00 EXPLORATION_COMPLETE** `(f848088)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260422T0026/tf_15min`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260422T0026/tf_15min/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=25020`
+- **00:45:27 EXPLORATION_COMPLETE** `(f848088)` — `artifacts_dir=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260422T0026/tf_30min`, `csv_path=/Users/zach/Desktop/Forex/fx-scalper/backtest_results/explore_multi_tf_20260422T0026/tf_30min/full_results.csv`, `families=['pullback_ema', 'range_breakout', 'vwap_deviation', 'ema_cross', 'bb_rsi_mr', 'rsi_extreme', 'bb_rsi_mr_filtered', 'rsi_extreme_filtered']`, `total_runs=25020`
 
 ### 2026-04-21
 
