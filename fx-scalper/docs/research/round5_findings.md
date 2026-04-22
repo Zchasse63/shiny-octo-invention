@@ -106,7 +106,29 @@ london_open_2h               1    0.73       0
 
 ## 9. AI analysis integration
 
-**Pending.** Per ROUND_CHECKLIST mandate, I need to pass round-5 results through `vbt.chat` before closing the round. Query executes next (this session). Notes from prior vbt.chat calls still apply:
+Full artifact: [`ai_queries/20260422T155429-round5_weekday_session_analysis.md`](ai_queries/20260422T155429-round5_weekday_session_analysis.md) (cost $0.057, anthropic/default, 607 in / 3,662 out).
+
+Key vbt.chat takeaways:
+
+1. **On `tue_fri` vs `mon_thu`:** vbt.chat cannot cite a structural EUR/USD intra-week explanation from its corpus. Concrete recommendation: test **neighboring weekday variants** (`mon_fri`, `wed_fri`, `tue_wed_fri`, etc.) — if `tue_fri` is a lone spike while neighbors collapse, it's likely noise. If a smooth manifold of weekday variants all score well, the edge is real. **Action:** add `mon_fri` and `wed_fri` presets to `_WEEKDAY_PRESETS`, re-run round 5 delta.
+
+2. **On BB+RSI dominance:** no built-in "crowded trade decay" diagnostic in vbt Pro. The supported detection route is to pull `pf.trades.records_readable` / `pf.trade_history` and analyze trade-level stats across time slices — looking for PF or expectancy drifting down as the OOS window marches forward. **Action:** this is round 7 work, and it's now higher priority than originally planned.
+
+3. **On round-6 `adjust_func_nb` sizing:** confirmed API pattern is `vbt.Portfolio.from_signals(adjust_func_nb=..., adjust_args=(...), broadcast_named_args=dict(...))` with `vbt.Rep("size")`, `vbt.Rep("sl_stop")` placeholders and `size=vbt.RepFunc(lambda wrapper: np.full(wrapper.shape_2d, np.nan))`. Verbatim example given for ATR-inverse sizing. Maintainer guidance: prototype each of the three sizing variants separately, don't combine until each works.
+
+4. **On cash-sharing portfolio correlation (round 8):** there is **no built-in trade-stream correlation metric**. I must compute it from `pf.trades.records_readable` directly — overlap-in-exposure, simultaneous-drawdown, return-series-correlation across columns. Alternative architecture is to "return arrays and simulate once from stacked arrays" rather than stitch per-TF portfolios post-hoc.
+
+5. **Red flags called out:**
+   - Single-asset only → matches round 4 priority.
+   - Overfitting → 147/8,690 = 1.7% below random-expectation of ~5%, but maintainer warns high WR alone is not sufficient evidence.
+   - Super-fine session partitions failing due to thin trade counts → already observed (`london_open_2h`, `overlap_first_half` = 0-1 winners).
+   - Recommendation: use `@vbt.cv_split(selection=vbt.RepFunc(...))` so the train-split chooses a param set and the test-split is the held-out measurement — current 3-window 50/50 walk-forward is good but a custom `selection` function would add rigor.
+
+**New action items pulled forward into the plan:**
+- Round 5.5 (cheap delta): add `mon_fri`, `wed_fri` weekday presets + `tue_wed_fri`; re-run the round-5 filtered grid to test for lone-spike vs smooth-manifold.
+- Round 7 promotion: `pf.trades.records_readable` capture is now higher priority — needed both for MAE/MFE and for crowded-trade / decay detection over time slices.
+
+Notes from prior vbt.chat calls still apply:
 
 - Round 1→2: session filter is the edge. **Confirmed again** — 42/50 M5 winners and most M15 winners use explicit session filter.
 - Round 2→3: "trail off + moderate stops" for MR. **Mostly still true** at M5; M15 unfiltered bb_rsi_mr uses chandelier trail.
@@ -140,5 +162,5 @@ london_open_2h               1    0.73       0
 - [x] Primary metrics = PF + expectancy + WR + DD (§6)
 - [ ] RRR computed — **pending for round 4+ survivors**
 - [x] Multi-testing caveat noted (§8)
-- [ ] vbt.chat consulted — **pending, next action**
+- [x] vbt.chat consulted — artifact `20260422T155429-round5_weekday_session_analysis.md` (§9)
 - [x] Findings doc in correct 10-section structure

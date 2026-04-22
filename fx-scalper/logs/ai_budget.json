@@ -1,67 +1,17 @@
 {
-  "utc_date": "2026-04-21",
-  "spend_usd": 0.20750400000000002,
-  "call_count": 6,
+  "utc_date": "2026-04-22",
+  "spend_usd": 0.056751,
+  "call_count": 1,
   "queries": [
     {
-      "ts": "2026-04-21T20:00:16+00:00",
-      "tag": "smoke_test",
-      "provider": "openai",
-      "tokens": {
-        "input": 39,
-        "output": 0
-      },
-      "cost_usd": 9.75e-05
-    },
-    {
-      "ts": "2026-04-21T20:03:43+00:00",
-      "tag": "smoke_test_v2",
-      "provider": "openai",
-      "tokens": {
-        "input": 35,
-        "output": 154
-      },
-      "cost_usd": 0.0016275
-    },
-    {
-      "ts": "2026-04-21T20:06:22+00:00",
-      "tag": "smoke_test_v3_anthropic",
+      "ts": "2026-04-22T15:54:29+00:00",
+      "tag": "round5_weekday_session_analysis",
       "provider": "anthropic",
       "tokens": {
-        "input": 23,
-        "output": 108
+        "input": 607,
+        "output": 3662
       },
-      "cost_usd": 0.001689
-    },
-    {
-      "ts": "2026-04-21T21:08:30+00:00",
-      "tag": "iter1_eurusd_what_went_wrong",
-      "provider": "anthropic",
-      "tokens": {
-        "input": 2856,
-        "output": 4128
-      },
-      "cost_usd": 0.070488
-    },
-    {
-      "ts": "2026-04-21T21:37:35+00:00",
-      "tag": "iter2_round2_winners_analysis",
-      "provider": "anthropic",
-      "tokens": {
-        "input": 3256,
-        "output": 5074
-      },
-      "cost_usd": 0.08587800000000001
-    },
-    {
-      "ts": "2026-04-21T23:50:26+00:00",
-      "tag": "round3_5_portfolio_and_stress_tests",
-      "provider": "anthropic",
-      "tokens": {
-        "input": 448,
-        "output": 3092
-      },
-      "cost_usd": 0.047724
+      "cost_usd": 0.056751
     }
   ]
 }

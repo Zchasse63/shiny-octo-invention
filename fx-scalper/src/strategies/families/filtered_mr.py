@@ -49,12 +49,20 @@ _SESSION_PRESETS: dict[str, tuple[int, ...]] = {
 
 
 # Weekday presets — Mon=0..Fri=4. FX doesn't trade weekends.
+# Round 5.5: added mon_fri, wed_fri, tue_wed_fri per vbt.chat recommendation
+# to test whether tue_fri is a lone spike or part of a smooth manifold.
 _WEEKDAY_PRESETS: dict[str, tuple[int, ...]] = {
     "all": (0, 1, 2, 3, 4),
     "tue_thu": (1, 2, 3),         # Mid-week only (avoid Mon gap + Fri chop)
     "mon_thu": (0, 1, 2, 3),      # Avoid Friday profit-taking
     "tue_fri": (1, 2, 3, 4),      # Avoid Monday gap risk
     "wed_thu": (2, 3),            # Tightest mid-week
+    # Round 5.5 neighbors of tue_fri=(1,2,3,4) for lone-spike test per vbt.chat.
+    # If tue_fri's PF is real we expect neighbors to score similarly; if it's
+    # isolated while neighbors collapse, it's multi-testing noise.
+    "wed_fri": (2, 3, 4),          # tue_fri minus Tue — tighter
+    "tue_wed_fri": (1, 2, 4),      # tue_fri minus Thu — skip mid-late
+    "mon_tue_fri": (0, 1, 4),      # Start+end-of-week only (odd neighbor)
 }
 
 
@@ -154,8 +162,9 @@ class FilteredBBRSIMRFamily(SignalFamily):
             "session": ["all", "active", "london_ny_overlap",
                         "london_open_2h", "ny_open_2h",
                         "overlap_first_half", "overlap_second_half"],
-            # Round-5 weekday filter
-            "weekday": ["all", "tue_thu", "mon_thu", "tue_fri"],
+            # Round-5 weekday filter + round-5.5 neighbors of tue_fri
+            "weekday": ["all", "tue_thu", "mon_thu", "tue_fri",
+                        "wed_fri", "tue_wed_fri", "mon_tue_fri"],
             "max_spread_atr_frac": [0.25, 0.5],
         }
 
@@ -222,5 +231,6 @@ class FilteredRSIExtremeFamily(SignalFamily):
             "session": ["all", "active", "london_ny_overlap",
                         "london_open_2h", "ny_open_2h",
                         "overlap_first_half", "overlap_second_half"],
-            "weekday": ["all", "tue_thu", "mon_thu", "tue_fri"],
+            "weekday": ["all", "tue_thu", "mon_thu", "tue_fri",
+                        "wed_fri", "tue_wed_fri", "mon_tue_fri"],
         }

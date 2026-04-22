@@ -387,3 +387,161 @@ def _instantiate(family: SignalFamily, params: dict[str, Any]) -> SignalFamily:
             f"Every SignalFamily must set it to its Params dataclass."
         )
     return cls(params_type(**params))
+
+
+# ---------------------------------------------------------------------------
+# Round 7: per-trade records + MAE/MFE capture for top configs
+# ---------------------------------------------------------------------------
+
+def capture_trade_records(
+    bars: pd.DataFrame,
+    family: SignalFamily,
+    family_params: dict[str, Any],
+    exit_cfg: ExitConfig,
+    *,
+    leverage: int = MAX_LEVERAGE,
+    initial_cash: float = 500.0,
+    output_path: Path | None = None,
+) -> pd.DataFrame:
+    """Re-run a single config and capture its per-trade records.
+
+    This is the round-7 primitive: given one of round-5's top configs,
+    re-run the full-sample backtest and save ``pf.trades.records_readable``
+    plus per-trade MAE / MFE to parquet. Required for:
+
+      - stop-loss sizing sanity (is the initial SL too tight/loose vs
+        typical adverse excursion?)
+      - TP / trail sizing sanity (are we leaving money on the table?)
+      - crowded-trade decay detection (does PF / expectancy drift down
+        as the OOS window marches forward? vbt.chat recommendation from
+        round 5 §9.)
+
+    Args:
+        bars: OHLCV bars with mid_/bid_/ask_ columns, tz-aware UTC index.
+        family: Instance of the :class:`SignalFamily` to run (used only
+            for its type — a fresh instance is created from ``family_params``).
+        family_params: Dict of params matching the family's ``params_cls``.
+        exit_cfg: :class:`ExitConfig` controlling SL / TP / trail.
+        leverage: Position leverage.
+        initial_cash: Starting account size.
+        output_path: If set, write the trade records parquet here. The
+            MAE / MFE parquet lands next to it with a ``_mae_mfe`` suffix.
+
+    Returns:
+        Readable trade-records DataFrame with additional columns
+        ``mae_pct`` and ``mfe_pct`` (maximum adverse / favorable excursion
+        as a fraction of entry price).
+    """
+    from src.strategies.exits import config_to_vbt_params
+
+    import vectorbtpro as vbt
+
+    mid_close_col = "mid_close" if "mid_close" in bars.columns else "bid_close"
+    close = bars[mid_close_col]
+    slippage = _half_spread_slippage(bars)
+
+    fam_instance = _instantiate(family, family_params)
+    signals = fam_instance.generate(bars)
+
+    from src.indicators.engine import add_atr
+    try:
+        atr = add_atr(bars, length=14)["atr_14"]
+    except Exception:
+        atr = pd.Series(close.diff().abs().rolling(14).mean(), index=close.index)
+
+    vbt_params = config_to_vbt_params(
+        entries_long=signals.entries_long,
+        entries_short=signals.entries_short,
+        close=close,
+        atr=atr,
+        config=exit_cfg,
+    )
+
+    kwargs: dict[str, Any] = {
+        "close": close,
+        "entries": signals.entries_long,
+        "short_entries": signals.entries_short,
+        "tp_stop": vbt_params.tp_stop.fillna(0.0).to_numpy(),
+        "leverage": leverage,
+        "init_cash": initial_cash,
+        "freq": "1min",
+        "fees": 0.0,
+        "slippage": slippage,
+    }
+    if vbt_params.sl_trail and vbt_params.trail_distance_pct is not None:
+        kwargs["tsl_stop"] = vbt_params.trail_distance_pct.fillna(0.0).to_numpy()
+    else:
+        kwargs["sl_stop"] = vbt_params.sl_stop.fillna(0.0).to_numpy()
+
+    pf = vbt.Portfolio.from_signals(**kwargs)
+    trades = pf.trades.records_readable.copy()
+
+    # Compute MAE / MFE per trade. vbt's readable records use timestamps for
+    # Entry/Exit Index, so we resolve to integer positions on the bars index.
+    # For highs/lows we prefer mid-series when present, otherwise synthesize
+    # from bid/ask quotes (our Dukascopy Parquet stores bid_* + ask_* cols).
+    if "mid_high" in bars.columns and "mid_low" in bars.columns:
+        highs = bars["mid_high"].to_numpy()
+        lows = bars["mid_low"].to_numpy()
+    elif "high" in bars.columns and "low" in bars.columns:
+        highs = bars["high"].to_numpy()
+        lows = bars["low"].to_numpy()
+    elif {"bid_high", "bid_low", "ask_high", "ask_low"}.issubset(bars.columns):
+        highs = ((bars["bid_high"] + bars["ask_high"]) / 2.0).to_numpy()
+        lows = ((bars["bid_low"] + bars["ask_low"]) / 2.0).to_numpy()
+    else:
+        highs = close.to_numpy()
+        lows = close.to_numpy()
+
+    index = bars.index
+    entry_col = "Entry Index" if "Entry Index" in trades.columns else "entry_idx"
+    exit_col = "Exit Index" if "Exit Index" in trades.columns else "exit_idx"
+    entry_price_col = (
+        "Avg Entry Price" if "Avg Entry Price" in trades.columns else "entry_price"
+    )
+    direction_col = "Direction" if "Direction" in trades.columns else "direction"
+
+    def _resolve_idx(val: Any) -> int | None:
+        """Map either a timestamp or an integer to a row position."""
+        if isinstance(val, int | np.integer):
+            return int(val)
+        try:
+            return int(index.get_loc(val))
+        except (KeyError, TypeError):
+            return None
+
+    mae_pct: list[float] = []
+    mfe_pct: list[float] = []
+    for _, row in trades.iterrows():
+        i0 = _resolve_idx(row[entry_col])
+        i1 = _resolve_idx(row[exit_col])
+        if i0 is None or i1 is None or i1 <= i0:
+            mae_pct.append(float("nan"))
+            mfe_pct.append(float("nan"))
+            continue
+        try:
+            ep = float(row[entry_price_col])
+            window_high = float(np.nanmax(highs[i0 : i1 + 1]))
+            window_low = float(np.nanmin(lows[i0 : i1 + 1]))
+            direction = str(row[direction_col]).lower()
+            if direction == "long":
+                mfe_pct.append((window_high - ep) / ep)
+                mae_pct.append((window_low - ep) / ep)
+            else:  # short
+                mfe_pct.append((ep - window_low) / ep)
+                mae_pct.append((ep - window_high) / ep)
+        except (ValueError, TypeError):
+            mae_pct.append(float("nan"))
+            mfe_pct.append(float("nan"))
+
+    trades["mae_pct"] = mae_pct
+    trades["mfe_pct"] = mfe_pct
+
+    if output_path is not None:
+        output_path = Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        trades.to_parquet(output_path, index=False)
+        logger.info(
+            f"capture_trade_records: wrote {len(trades)} trades to {output_path}"
+        )
+    return trades
