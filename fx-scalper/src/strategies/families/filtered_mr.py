@@ -23,19 +23,38 @@ from src.strategies.filters import (
     ADXFilterParams,
     SessionFilterParams,
     SpreadFilterParams,
+    WeekdayFilterParams,
     apply_filter_stack,
 )
 
 # Pre-defined session buckets covering the main FX sessions.
+# Expanded for round 5 per vbt.chat recommendation: "finer session partitions
+# (London open only, NY open only, overlap first/second half)".
 _SESSION_PRESETS: dict[str, tuple[int, ...]] = {
     "all": tuple(range(24)),
     "asian": (23, 0, 1, 2, 3, 4, 5, 6),
     "pre_london": (6, 7),
+    "london_open_1h": (8,),                 # London open hour only
+    "london_open_2h": (8, 9),               # First two London hours
     "london": (8, 9, 10, 11),
     "london_ny_overlap": (12, 13, 14, 15),
+    "overlap_first_half": (12, 13),         # First 2h of overlap
+    "overlap_second_half": (14, 15),        # Last 2h of overlap
+    "ny_open_1h": (13,),                    # NY 8:00 ET ≈ 13:00 UTC
+    "ny_open_2h": (13, 14),
     "ny": (16, 17, 18, 19, 20),
-    "active": (7, 8, 9, 10, 11, 12, 13, 14, 15, 16),  # London+NY combined
+    "active": (7, 8, 9, 10, 11, 12, 13, 14, 15, 16),  # London + NY combined
     "asian_plus_london": (23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
+}
+
+
+# Weekday presets — Mon=0..Fri=4. FX doesn't trade weekends.
+_WEEKDAY_PRESETS: dict[str, tuple[int, ...]] = {
+    "all": (0, 1, 2, 3, 4),
+    "tue_thu": (1, 2, 3),         # Mid-week only (avoid Mon gap + Fri chop)
+    "mon_thu": (0, 1, 2, 3),      # Avoid Friday profit-taking
+    "tue_fri": (1, 2, 3, 4),      # Avoid Monday gap risk
+    "wed_thu": (2, 3),            # Tightest mid-week
 }
 
 
@@ -63,6 +82,7 @@ class FilteredBBRSIMRParams:
     # Filters
     max_adx: float | None = 25.0
     session: str = "all"
+    weekday: str = "all"
     max_spread_atr_frac: float = 0.25
 
 
@@ -93,6 +113,7 @@ class FilteredBBRSIMRFamily(SignalFamily):
 
         # Compose filters.
         session_hours = _SESSION_PRESETS.get(self._p.session, _SESSION_PRESETS["all"])
+        weekdays = _WEEKDAY_PRESETS.get(self._p.weekday, _WEEKDAY_PRESETS["all"])
         filtered_long, filtered_short = apply_filter_stack(
             entries_long=base.entries_long,
             entries_short=base.entries_short,
@@ -103,6 +124,11 @@ class FilteredBBRSIMRFamily(SignalFamily):
                 else None
             ),
             session=SessionFilterParams(allowed_hours_utc=session_hours),
+            weekday=(
+                WeekdayFilterParams(allowed_weekdays=weekdays)
+                if len(weekdays) < 5
+                else None
+            ),
             spread=(
                 SpreadFilterParams(max_spread_atr_frac=self._p.max_spread_atr_frac)
                 if self._p.max_spread_atr_frac < 1.0
@@ -116,32 +142,38 @@ class FilteredBBRSIMRFamily(SignalFamily):
 
     def param_grid(self) -> dict[str, list[Any]]:
         return {
-            # Round-1 basin, widened slightly
+            # Round-3 best basin (unfiltered bb_rsi_mr: BB(30,2.5) RSI(21) 35/80)
             "bb_length": [20, 30, 40],
             "bb_std": [2.0, 2.25, 2.5],
             "rsi_length": [14, 21, 30],
-            "rsi_long_threshold": [20, 25, 30],
+            "rsi_long_threshold": [20, 25, 30, 35],
             "rsi_short_threshold": [70, 75, 80],
-            # New filter dimensions
-            "max_adx": [None, 20.0, 25.0, 30.0],
-            "session": ["all", "asian", "active", "london_ny_overlap"],
-            "max_spread_atr_frac": [0.15, 0.25, 0.5],
+            # ADX — round-2 showed None works best, kept for ablation
+            "max_adx": [None, 25.0],
+            # Round-5 session expansion — finer partitions per vbt.chat
+            "session": ["all", "active", "london_ny_overlap",
+                        "london_open_2h", "ny_open_2h",
+                        "overlap_first_half", "overlap_second_half"],
+            # Round-5 weekday filter
+            "weekday": ["all", "tue_thu", "mon_thu", "tue_fri"],
+            "max_spread_atr_frac": [0.25, 0.5],
         }
 
 
 @dataclass(frozen=True, slots=True)
 class FilteredRSIExtremeParams:
-    """Filtered RSI-extreme params."""
+    """Filtered RSI-extreme params (round-5 adds weekday filter)."""
 
     rsi_length: int = 21
     oversold: float = 25.0
     overbought: float = 75.0
     max_adx: float | None = 25.0
     session: str = "all"
+    weekday: str = "all"
 
 
 class FilteredRSIExtremeFamily(SignalFamily):
-    """RSI-extreme family with ADX + session filters."""
+    """RSI-extreme family with ADX + session + weekday filters."""
 
     name = "rsi_extreme_filtered"
     params_cls = FilteredRSIExtremeParams
@@ -159,6 +191,7 @@ class FilteredRSIExtremeFamily(SignalFamily):
         ).generate(candles)
 
         session_hours = _SESSION_PRESETS.get(self._p.session, _SESSION_PRESETS["all"])
+        weekdays = _WEEKDAY_PRESETS.get(self._p.weekday, _WEEKDAY_PRESETS["all"])
         filtered_long, filtered_short = apply_filter_stack(
             entries_long=base.entries_long,
             entries_short=base.entries_short,
@@ -169,6 +202,11 @@ class FilteredRSIExtremeFamily(SignalFamily):
                 else None
             ),
             session=SessionFilterParams(allowed_hours_utc=session_hours),
+            weekday=(
+                WeekdayFilterParams(allowed_weekdays=weekdays)
+                if len(weekdays) < 5
+                else None
+            ),
         )
         return FamilySignals(
             entries_long=filtered_long.fillna(False).astype(bool),
@@ -180,6 +218,9 @@ class FilteredRSIExtremeFamily(SignalFamily):
             "rsi_length": [14, 21, 30],
             "oversold": [20, 25, 30],
             "overbought": [70, 75, 80],
-            "max_adx": [None, 20.0, 25.0, 30.0],
-            "session": ["all", "asian", "active", "london_ny_overlap"],
+            "max_adx": [None, 25.0],
+            "session": ["all", "active", "london_ny_overlap",
+                        "london_open_2h", "ny_open_2h",
+                        "overlap_first_half", "overlap_second_half"],
+            "weekday": ["all", "tue_thu", "mon_thu", "tue_fri"],
         }

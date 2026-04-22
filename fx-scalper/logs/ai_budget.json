@@ -1,7 +1,7 @@
 {
   "utc_date": "2026-04-21",
-  "spend_usd": 0.15978,
-  "call_count": 5,
+  "spend_usd": 0.20750400000000002,
+  "call_count": 6,
   "queries": [
     {
       "ts": "2026-04-21T20:00:16+00:00",
@@ -52,6 +52,16 @@
         "output": 5074
       },
       "cost_usd": 0.08587800000000001
+    },
+    {
+      "ts": "2026-04-21T23:50:26+00:00",
+      "tag": "round3_5_portfolio_and_stress_tests",
+      "provider": "anthropic",
+      "tokens": {
+        "input": 448,
+        "output": 3092
+      },
+      "cost_usd": 0.047724
     }
   ]
 }

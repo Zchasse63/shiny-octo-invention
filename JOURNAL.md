@@ -2,8 +2,8 @@
 
 Auto-generated from `fx-scalper/logs/events.jsonl` and `fx-scalper/docs/journal_manual.md`. **Do not hand-edit this file** — regenerate with `python fx-scalper/scripts/render_journal.py` (the pre-commit hook also runs this).
 
-Last rendered: `2026-04-21 23:37:31` UTC  
-Events logged: **55**
+Last rendered: `2026-04-22 00:25:35` UTC  
+Events logged: **59**
 
 ## Narrative overlay
 
@@ -69,6 +69,11 @@ into JOURNAL.md below this overlay.
 
 
 ## Event log
+
+### 2026-04-22
+
+- **00:24:43 AI_QUERY** `(12a7c78)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-40/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260422T002443-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **00:24:56 AI_QUERY** `(12a7c78)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-41/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260422T002456-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
 
 ### 2026-04-21
 
@@ -146,3 +151,5 @@ into JOURNAL.md below this overlay.
   Running M5+M15+M30 top configs on $1500 ($500 each) gives ~$2000/yr with ~20% DD assuming moderate correlation. vs single M5-only on $1500: $1092/yr with 26% DD. Round 5 needs saved equity curves to measure real correlation.
 - **23:37:29 DECISION `(de61389)`: M15 bb_rsi_mr has exceptional risk-adjusted returns**  
   RRR 6.41x — annual profit is 6.41x of max drawdown. Professional-grade. Top config: BB(30,2.5), RSI(21), thresholds 35/80, SL 0.5xATR, TP 1.5R, chandelier 2xATR trail.
+- **23:37:33 AI_QUERY** `(de61389)` — `artifact=/private/var/folders/xw/wy0mmntn4mv648kngfz29k0w0000gn/T/pytest-of-zach/pytest-39/test_dry_run_does_not_call_pro0/docs/research/ai_queries/20260421T233733-test.md`, `cost_usd=0.0`, `daily_spend_so_far_usd=0.0`, `input_tokens=6`, `model=anthropic/dry-run`, `output_tokens=0`, `provider=anthropic`, `tag=test`
+- **23:50:26 AI_QUERY** `(12a7c78)` — `artifact=/Users/zach/Desktop/Forex/fx-scalper/docs/research/ai_queries/20260421T235026-round3_5_portfolio_and_stress_tests.md`, `cost_usd=0.047724`, `daily_spend_so_far_usd=0.2075`, `input_tokens=448`, `model=anthropic/default`, `output_tokens=3092`, `provider=anthropic`, `tag=round3_5_portfolio_and_stress_tests`

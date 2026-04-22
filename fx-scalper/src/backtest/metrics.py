@@ -45,12 +45,16 @@ class BacktestMetrics:
         win_rate: Wins / total_trades.
         profit_factor: Sum(wins) / |Sum(losses)|. Inf if no losses.
         expectancy_usd: Average PnL per trade in account currency.
-        sharpe: Annualized Sharpe of minute-bar returns.
-        sortino: Annualized Sortino ratio.
+        sharpe: Annualized Sharpe of per-bar returns (frequency auto-detected).
+        sortino: Annualized Sortino ratio (same caveat).
         calmar: CAGR / |max_drawdown|.
         max_drawdown_pct: Maximum drawdown as a fraction (e.g. 0.12 = 12%).
         avg_drawdown_duration_bars: Mean duration of drawdowns in bars.
         cagr: Compound annual growth rate.
+        coverage_years: Wall-clock years covered by the input returns series.
+            Downstream code uses this to compute true annualized profit
+            instead of the "12/N months" shortcuts that produced inconsistent
+            numbers in rounds 3 and 3.5. See ROUND_CHECKLIST.md.
     """
 
     total_trades: int
@@ -63,10 +67,24 @@ class BacktestMetrics:
     max_drawdown_pct: float
     avg_drawdown_duration_bars: float
     cagr: float
+    coverage_years: float = 0.0
 
     def as_dict(self) -> dict[str, Any]:
         """Return a JSON-friendly dict."""
         return asdict(self)
+
+    def annualized_profit_usd(self) -> float:
+        """True annualized profit computed from ``coverage_years``.
+
+        ``expectancy_usd × total_trades`` is the total profit over the
+        backtest window; dividing by the actual wall-clock coverage gives
+        the correct annual figure regardless of timeframe or split count.
+        Returns 0 if coverage wasn't recorded.
+        """
+        if self.coverage_years <= 0 or self.total_trades == 0:
+            return 0.0
+        total = self.expectancy_usd * self.total_trades
+        return total / self.coverage_years
 
 
 def compute_metrics(
@@ -98,6 +116,12 @@ def compute_metrics(
     if minutes_per_year is None:
         minutes_per_year = _infer_bars_per_year(returns) or MINUTES_PER_YEAR
 
+    # Wall-clock coverage in years (for honest annualization downstream).
+    coverage_years = 0.0
+    if isinstance(returns.index, pd.DatetimeIndex) and len(returns) >= 2:
+        delta = returns.index[-1] - returns.index[0]
+        coverage_years = delta.total_seconds() / (365.0 * 24.0 * 3600.0)
+
     total_trades = int(trade_pnl_usd.shape[0])
     if total_trades == 0:
         return BacktestMetrics(
@@ -111,6 +135,7 @@ def compute_metrics(
             max_drawdown_pct=0.0,
             avg_drawdown_duration_bars=0.0,
             cagr=0.0,
+            coverage_years=coverage_years,
         )
 
     wins = trade_pnl_usd[trade_pnl_usd > 0]
@@ -178,4 +203,5 @@ def compute_metrics(
         max_drawdown_pct=abs(max_dd),
         avg_drawdown_duration_bars=avg_dd_duration,
         cagr=cagr,
+        coverage_years=coverage_years,
     )

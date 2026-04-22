@@ -196,6 +196,45 @@ def spread_filter(
 
 
 # ---------------------------------------------------------------------------
+# Weekday filter — gate by day of week
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True, slots=True)
+class WeekdayFilterParams:
+    """Parameters for :func:`weekday_filter`.
+
+    Attributes:
+        allowed_weekdays: Tuple of Python weekdays (Mon=0 … Fri=4) where
+            entries are allowed. Saturday=5 and Sunday=6 are market-closed.
+            Common variants:
+            - (0,1,2,3,4) = all weekdays (default, no filter)
+            - (1,2,3) = Tue-Thu only (avoid Monday gap + Friday chop)
+            - (0,1,2,3) = Mon-Thu (avoid Friday profit-taking)
+            - (1,2,3,4) = Tue-Fri (avoid Monday gap)
+    """
+
+    allowed_weekdays: tuple[int, ...] = (0, 1, 2, 3, 4)
+
+
+def weekday_filter(
+    entries: pd.Series,
+    candles: pd.DataFrame,
+    params: WeekdayFilterParams | None = None,
+) -> pd.Series:
+    """Mask entries outside allowed weekdays.
+
+    vbt.chat iteration (round-3.5 artifact) identified weekday / intraday
+    filters as the cheapest untested "non-indicator" dimension.
+    """
+    p = params or WeekdayFilterParams()
+    if len(p.allowed_weekdays) >= 5:
+        return entries
+    weekdays = candles.index.weekday
+    mask = pd.Series(weekdays, index=candles.index).isin(p.allowed_weekdays)
+    return entries & mask
+
+
+# ---------------------------------------------------------------------------
 # Compose-all — default preset for "sensible" filtering
 # ---------------------------------------------------------------------------
 
@@ -207,6 +246,7 @@ def apply_filter_stack(
     adx: ADXFilterParams | None = None,
     session: SessionFilterParams | None = None,
     vol: VolRegimeFilterParams | None = None,
+    weekday: WeekdayFilterParams | None = None,
     spread: SpreadFilterParams | None = None,
 ) -> tuple[pd.Series, pd.Series]:
     """Apply a stack of filters to long + short entries.
@@ -224,6 +264,8 @@ def apply_filter_stack(
             out = session_filter(out, candles, session)
         if vol is not None:
             out = vol_regime_filter(out, candles, vol)
+        if weekday is not None:
+            out = weekday_filter(out, candles, weekday)
         if spread is not None:
             out = spread_filter(out, candles, spread)
         return out
