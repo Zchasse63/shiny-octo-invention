@@ -22,6 +22,12 @@ from src.strategies.families.range_breakout import (
     RangeBreakoutParams,
 )
 from src.strategies.families.rsi_extreme import RSIExtremeFamily, RSIExtremeParams
+from src.strategies.families.trend_following import (
+    DonchianBreakoutFamily,
+    DonchianBreakoutParams,
+    MACrossoverFamily,
+    MACrossoverParams,
+)
 from src.strategies.families.vwap_deviation import (
     VWAPDeviationFamily,
     VWAPDeviationParams,
@@ -30,6 +36,8 @@ from src.strategies.families.vwap_deviation import (
 __all__ = [
     "BBRSIMRFamily",
     "BBRSIMRParams",
+    "DonchianBreakoutFamily",
+    "DonchianBreakoutParams",
     "EMACrossFamily",
     "EMACrossParams",
     "FamilySignals",
@@ -37,6 +45,8 @@ __all__ = [
     "FilteredBBRSIMRParams",
     "FilteredRSIExtremeFamily",
     "FilteredRSIExtremeParams",
+    "MACrossoverFamily",
+    "MACrossoverParams",
     "PullbackEMAFamily",
     "PullbackEMAParams",
     "RangeBreakoutFamily",
