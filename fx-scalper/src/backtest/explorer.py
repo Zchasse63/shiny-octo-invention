@@ -132,12 +132,22 @@ def _run_single_backtest(
     leverage: int,
     initial_cash: float,
     slippage: np.ndarray | None,
+    notional_per_trade: float = 5000.0,
 ) -> BacktestMetrics:
     """Run ``vbt.Portfolio.from_signals`` for one config + compute metrics.
 
-    vbt uses SEPARATE kwargs for fixed stop (``sl_stop``) vs trailing stop
-    (``tsl_stop``). When trail is enabled we pass the trail distance via
-    ``tsl_stop`` and skip ``sl_stop``; when disabled we pass ``sl_stop`` only.
+    Sizing: every trade commits a FIXED ``notional_per_trade`` dollars
+    (default $5,000 = $100 margin × 50 leverage per the user directive
+    in CLAUDE.md). Implemented via ``size=notional_per_trade,
+    size_type='value'`` — the canonical vbt.pro pattern confirmed in
+    the round-6 vbt.chat artifact. Previously we let vbt size at
+    full-equity × leverage, which over-stated dollar expectancy and
+    caused account-blowup compounding on losing streaks.
+
+    vbt uses SEPARATE kwargs for fixed stop (``sl_stop``) vs trailing
+    stop (``tsl_stop``). When trail is enabled we pass the trail
+    distance via ``tsl_stop`` and skip ``sl_stop``; when disabled we
+    pass ``sl_stop`` only.
     """
     import vectorbtpro as vbt
 
@@ -146,6 +156,8 @@ def _run_single_backtest(
         "entries": entries_long,
         "short_entries": entries_short,
         "tp_stop": tp_frac.fillna(0.0).to_numpy(),
+        "size": notional_per_trade,
+        "size_type": "value",
         "leverage": leverage,
         "init_cash": initial_cash,
         "freq": "1min",
@@ -462,6 +474,10 @@ def capture_trade_records(
         "entries": signals.entries_long,
         "short_entries": signals.entries_short,
         "tp_stop": vbt_params.tp_stop.fillna(0.0).to_numpy(),
+        # Fixed $5,000 notional per trade (= $100 margin × 50 leverage per
+        # CLAUDE.md). Without this vbt sizes at full equity × leverage.
+        "size": 5000.0,
+        "size_type": "value",
         "leverage": leverage,
         "init_cash": initial_cash,
         "freq": "1min",
