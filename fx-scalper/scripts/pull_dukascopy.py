@@ -29,10 +29,24 @@ from src.backtest.dukascopy_client import fetch_range  # noqa: E402
 from src.utils.logger import get_logger, init_logger  # noqa: E402
 
 # Map OANDA underscore names to Dukascopy instrument codes.
+# Expanded for G10 basket (rounds 12-13 trend-following research).
 OANDA_TO_DUKA = {
     "EUR_USD": "EURUSD",
     "GBP_USD": "GBPUSD",
     "USD_JPY": "USDJPY",
+    "AUD_USD": "AUDUSD",
+    "NZD_USD": "NZDUSD",
+    "USD_CHF": "USDCHF",
+    "USD_CAD": "USDCAD",
+    "EUR_GBP": "EURGBP",
+    "EUR_JPY": "EURJPY",
+    "GBP_JPY": "GBPJPY",
+    "AUD_JPY": "AUDJPY",
+    "CHF_JPY": "CHFJPY",
+    "EUR_CHF": "EURCHF",
+    "EUR_AUD": "EURAUD",
+    "GBP_CHF": "GBPCHF",
+    "AUD_NZD": "AUDNZD",
 }
 
 
