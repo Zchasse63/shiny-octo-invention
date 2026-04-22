@@ -60,3 +60,16 @@ ALL_FAMILIES: list[type[SignalFamily]] = [
     FilteredRSIExtremeFamily,
 ]
 """Every family included in the exploratory sweep (round 2 adds filtered MR variants)."""
+
+
+def get_family_by_name(name: str) -> type[SignalFamily] | None:
+    """Resolve a family class by its ``.name`` attribute.
+
+    Used by scripts that read CSV results (where the family is stored as
+    a string) and need to reconstruct the signal family to re-run it.
+    Returns None if no match.
+    """
+    for cls in ALL_FAMILIES:
+        if getattr(cls, "name", None) == name:
+            return cls
+    return None
