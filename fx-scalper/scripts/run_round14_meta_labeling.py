@@ -177,12 +177,15 @@ def main() -> int:
     init_logger()
     logger = get_logger(__name__)
 
-    # Need lightgbm
+    # Prefer lightgbm; fall back to sklearn HistGradientBoostingClassifier
+    # which is pure Python and doesn't need libomp (avoids install pain).
     try:
-        import lightgbm as lgb
-    except ImportError:
-        logger.error("lightgbm not installed. Run: pip install lightgbm")
-        return 1
+        import lightgbm as lgb  # noqa: F401
+        USE_LGBM = True
+    except (ImportError, OSError):
+        from sklearn.ensemble import HistGradientBoostingClassifier
+        USE_LGBM = False
+        logger.info("lightgbm unavailable; using sklearn HistGradientBoostingClassifier")
 
     # Load EUR/USD M15 (our primary signal's native TF)
     logger.info("Loading EUR/USD M15 data")
@@ -238,12 +241,19 @@ def main() -> int:
     for split in splits:
         tr_X, tr_y = X_clean.iloc[split.train_idx], y[split.train_idx]
         te_X, te_y = X_clean.iloc[split.test_idx], y[split.test_idx]
-        model = lgb.LGBMClassifier(
-            n_estimators=200, learning_rate=0.05,
-            num_leaves=31, max_depth=6, min_child_samples=20,
-            subsample=0.8, colsample_bytree=0.8,
-            random_state=42, verbose=-1,
-        )
+        if USE_LGBM:
+            model = lgb.LGBMClassifier(
+                n_estimators=200, learning_rate=0.05,
+                num_leaves=31, max_depth=6, min_child_samples=20,
+                subsample=0.8, colsample_bytree=0.8,
+                random_state=42, verbose=-1,
+            )
+        else:
+            model = HistGradientBoostingClassifier(
+                max_iter=200, learning_rate=0.05,
+                max_depth=6, max_leaf_nodes=31, min_samples_leaf=20,
+                random_state=42,
+            )
         model.fit(tr_X, tr_y)
         probs = model.predict_proba(te_X)[:, 1]
         all_preds[split.test_idx] = probs
