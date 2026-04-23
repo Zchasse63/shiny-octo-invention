@@ -188,8 +188,12 @@ def main() -> int:
         logger.info("lightgbm unavailable; using sklearn HistGradientBoostingClassifier")
 
     # Load EUR/USD M15 (our primary signal's native TF)
-    logger.info("Loading EUR/USD M15 data")
-    m1 = load_symbol_bars("EUR_USD", start="2023-01-01", end="2026-04-20")
+    # Default to full range; override with FXSCALPER_START / FXSCALPER_END env.
+    import os
+    start = os.environ.get("FXSCALPER_START", "2023-01-01")
+    end = os.environ.get("FXSCALPER_END", "2026-04-20")
+    logger.info(f"Loading EUR/USD M15 data {start}..{end}")
+    m1 = load_symbol_bars("EUR_USD", start=start, end=end)
     m15 = resample_bars(m1, "15min")
     close_col = "mid_close" if "mid_close" in m15.columns else "bid_close"
     close = m15[close_col]
